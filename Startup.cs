@@ -12,6 +12,8 @@ using Microsoft.Extensions.Logging.Debug;
 using Microsoft.AspNetCore.SignalR;
 using PersonalSite.Hubs;
 using PersonalSite.MQTT;
+using Microsoft.EntityFrameworkCore;
+using PersonalSite.Data;
 
 namespace PersonalSite
 {
@@ -28,6 +30,8 @@ namespace PersonalSite
 
             mqttBroker = new MQTTBroker(1883);
             MQTTProducer.init();
+
+            //Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;
         }
 
         public IConfiguration Configuration { get; }
@@ -37,6 +41,9 @@ namespace PersonalSite
         {
             services.AddRazorPages();
             services.AddSignalR();
+
+            services.AddDbContext<PersonalSiteContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("PersonalSiteContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
