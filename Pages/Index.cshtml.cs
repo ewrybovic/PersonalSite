@@ -4,21 +4,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using PersonalSite.Data;
+using PersonalSite.Models;
 
 namespace PersonalSite.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        private readonly PersonalSite.Data.PersonalSiteContext _context;
 
-        public IndexModel(ILogger<IndexModel> logger)
+        public IndexModel(PersonalSite.Data.PersonalSiteContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
-        public void OnGet()
+        public IList<User> User { get;set; }
+
+        public async Task OnGetAsync()
         {
+            User = await _context.User.ToListAsync();
         }
     }
 }
