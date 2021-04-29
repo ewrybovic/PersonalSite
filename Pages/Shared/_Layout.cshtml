@@ -1,4 +1,14 @@
 ﻿<!DOCTYPE html>
+
+@using Microsoft.AspNetCore.Http
+@{
+    string user = Context.Session.GetString("user");
+    if (user != null)
+    {
+        ViewData["user"] = user;
+    }
+}
+
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -25,18 +35,31 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/ArduinoCommunicator">Arduino Communicator</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/GitHubRepos">GitHub Repos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/UserAction/SignUp">Sign Up</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/UserAction/LogIn">Log In</a>
-                        </li>
-
-                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
+                    </ul>
+                </div>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1">
+                        @if (user == null)
+                        {
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/UserAction/SignUp">Sign Up</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/UserAction/LogIn">Log In</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-muted">@ViewData["user"]</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/UserAction/LogOut">Log Out</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
