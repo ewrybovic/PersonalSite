@@ -41,6 +41,10 @@ namespace PersonalSite
         {
             services.AddRazorPages();
             services.AddSignalR();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(10);
+            });
 
             services.AddDbContext<PersonalSiteContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("PersonalSiteContext")));
@@ -64,6 +68,7 @@ namespace PersonalSite
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSession();
 
             app.UseRouting();
 

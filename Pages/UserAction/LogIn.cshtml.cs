@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +43,8 @@ namespace PersonalSite.Pages.UserAction
             User = result[0];
             if (Verify(Request.Form["password"].ToString(), User.Password))
             {
+                HttpContext.Session.SetString("valid", "true");
+                HttpContext.Session.SetString("user", User.Username);
                 return RedirectToPage("../Index");
             }
             else
