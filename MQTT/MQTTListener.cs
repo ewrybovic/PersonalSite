@@ -24,18 +24,15 @@ namespace PersonalSite.MQTT
             client.UseApplicationMessageReceivedHandler(async e =>
             {   
                 Console.WriteLine($"Recieved on topic: {e.ApplicationMessage.Topic}");
-                //if (e.ApplicationMessage.Topic == "/response")
-                {
-                    await hubContext.Clients.All.SendAsync("ReceiveMessage", "Arduino", Encoding.UTF8.GetString(e.ApplicationMessage.Payload));
-                }
+                await hubContext.Clients.All.SendAsync("ReceiveMessage", "Arduino", Encoding.UTF8.GetString(e.ApplicationMessage.Payload));
             });
 
             client.UseConnectedHandler(async e => 
             {
                 Console.WriteLine("Listener is connected to server");
-
-                await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic("Test").Build());
                 await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic("/response").Build());
+                await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic("/response/temp").Build());
+                await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic("/response/humid").Build());
                 Console.WriteLine("Listener has subscribed to topics");
             });
         }
