@@ -11,10 +11,32 @@ connection.on("ReceiveMessage", function (user, message) {
     var li = document.createElement("li");
     li.textContent = encodedMsg;
     document.getElementById("messagesList").appendChild(li);
+    console.log("Rec");
+});
+
+connection.on("ReceiveTemp", function (temp) {
+    var msg = temp.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    document.getElementById("tempText").innerHTML = msg;
+});
+
+connection.on("ReceiveHumid", function (humid) {
+    var msg = humid.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    document.getElementById("humidText").innerHTML = msg;
+});
+
+connection.on("ResponseMostRecent", function (humid, temp) {
+    document.getElementById("humidText").innerHTML = humid;
+    document.getElementById("tempText").innerHTML = temp;
 });
 
 connection.start().then(function () {
     document.getElementById("sendButton").disabled = false;
+
+    // Call function to get the last temp and humid data
+    connection.invoke("RequestMostRecent").catch(function (err) {
+        return console.error(err.toString());
+    })
+
 }).catch(function (err) {
     return console.error(err.toString());
 });

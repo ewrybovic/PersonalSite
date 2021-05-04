@@ -13,5 +13,10 @@ namespace PersonalSite.Hubs
             await MQTTProducer.sendMessage(user, message);
             await Clients.All.SendAsync("ReceiveMessage", user, message);
         }
+
+        public async Task RequestMostRecent()
+        {
+            await Clients.Caller.SendAsync("ResponseMostRecent", MQTTListener.GetMostRecentHumid(), MQTTListener.GetMostRecentTemp());
+        }
     }
 }
