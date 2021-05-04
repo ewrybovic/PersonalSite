@@ -24,9 +24,15 @@ connection.on("ReceiveHumid", function (humid) {
     document.getElementById("humidText").innerHTML = msg;
 });
 
-connection.on("ResponseMostRecent", function (humid, temp) {
+connection.on("ReceiveMoist", function (moist) {
+    var msg = moist.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    document.getElementById("moistText").innerHTML = msg;
+});
+
+connection.on("ResponseMostRecent", function (humid, temp, moist) {
     document.getElementById("humidText").innerHTML = humid;
     document.getElementById("tempText").innerHTML = temp;
+    document.getElementById("moistText").innerHTML = moist;
 });
 
 connection.start().then(function () {

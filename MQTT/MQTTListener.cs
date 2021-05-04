@@ -14,6 +14,7 @@ namespace PersonalSite.MQTT
 
         private static double MostRecentTemp = 0;
         private static double MostRecentHumid = 0;
+        private static double MostRecentMoist = 0;
 
         public MQTTListener(IHubContext<ChatHub> hubContext)
         {
@@ -36,6 +37,11 @@ namespace PersonalSite.MQTT
                     MostRecentHumid = Math.Round(Double.Parse(Encoding.UTF8.GetString(e.ApplicationMessage.Payload)), 2);
                     await hubContext.Clients.All.SendAsync("ReceiveHumid", MostRecentHumid.ToString());
                 }
+                else if (e.ApplicationMessage.Topic.Contains("moist"))
+                {
+                    MostRecentMoist = Math.Round(Double.Parse(Encoding.UTF8.GetString(e.ApplicationMessage.Payload)), 2);
+                    await hubContext.Clients.All.SendAsync("ReceiveMoist", MostRecentMoist.ToString());
+                }
                 else
                     await hubContext.Clients.All.SendAsync("ReceiveMessage", "Arduino", Encoding.UTF8.GetString(e.ApplicationMessage.Payload));
             });
@@ -46,6 +52,7 @@ namespace PersonalSite.MQTT
                 await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic("/response").Build());
                 await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic("/response/temp").Build());
                 await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic("/response/humid").Build());
+                await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic("/response/moist").Build());
                 Console.WriteLine("Listener has subscribed to topics");
             });
         }
@@ -60,6 +67,11 @@ namespace PersonalSite.MQTT
         public static double GetMostRecentHumid()
         {
             return MostRecentHumid;
+        }
+
+        public static double GetMostRecentMoist()
+        {
+            return MostRecentMoist;
         }
     }
 }
