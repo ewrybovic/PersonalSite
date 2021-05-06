@@ -16,7 +16,7 @@ namespace PersonalSite.Hubs
 
         public async Task RequestMostRecent()
         {
-            await Clients.Caller.SendAsync("ResponseMostRecent", MQTTListener.GetMostRecentHumid(), MQTTListener.GetMostRecentTemp());
+            await Clients.Caller.SendAsync("ResponseMostRecent", MQTTListener.GetMostRecentHumid(), MQTTListener.GetMostRecentTemp(), MQTTListener.GetMostRecentMoist());
         }
     }
 }
