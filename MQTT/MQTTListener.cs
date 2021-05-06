@@ -15,35 +15,19 @@ namespace PersonalSite.MQTT
         private static double MostRecentTemp = 0;
         private static double MostRecentHumid = 0;
         private static double MostRecentMoist = 0;
+        private IHubContext<ChatHub> hubContext;
 
         public MQTTListener(IHubContext<ChatHub> hubContext)
         {
-            var factory = new MqttFactory();
-            client = factory.CreateMqttClient();
-            var options = new MqttClientOptionsBuilder().WithTcpServer("localhost", 1883);
+            this.hubContext = hubContext;
 
+            client = new MqttFactory().CreateMqttClient();
+            var options = new MqttClientOptionsBuilder().WithTcpServer("localhost", 1883);
             client.ConnectAsync(options.Build());
 
             client.UseApplicationMessageReceivedHandler(async e =>
-            {   
-                Console.WriteLine($"Recieved on topic: {e.ApplicationMessage.Topic}");
-                if (e.ApplicationMessage.Topic.Contains("temp"))
-                {
-                    MostRecentTemp = Math.Round(Double.Parse(Encoding.UTF8.GetString(e.ApplicationMessage.Payload)), 2);
-                    await hubContext.Clients.All.SendAsync("ReceiveTemp", MostRecentTemp.ToString());
-                }
-                else if (e.ApplicationMessage.Topic.Contains("humid"))
-                {
-                    MostRecentHumid = Math.Round(Double.Parse(Encoding.UTF8.GetString(e.ApplicationMessage.Payload)), 2);
-                    await hubContext.Clients.All.SendAsync("ReceiveHumid", MostRecentHumid.ToString());
-                }
-                else if (e.ApplicationMessage.Topic.Contains("moist"))
-                {
-                    MostRecentMoist = Math.Round(Double.Parse(Encoding.UTF8.GetString(e.ApplicationMessage.Payload)), 2);
-                    await hubContext.Clients.All.SendAsync("ReceiveMoist", MostRecentMoist.ToString());
-                }
-                else
-                    await hubContext.Clients.All.SendAsync("ReceiveMessage", "Arduino", Encoding.UTF8.GetString(e.ApplicationMessage.Payload));
+            {
+                await ParseTopicAsync(e.ApplicationMessage.Topic, e.ApplicationMessage.Payload);
             });
 
             client.UseConnectedHandler(async e => 
@@ -72,6 +56,40 @@ namespace PersonalSite.MQTT
         public static double GetMostRecentMoist()
         {
             return MostRecentMoist;
+        }
+
+        private async System.Threading.Tasks.Task ParseTopicAsync(string topic, byte[] payload)
+        {
+            string method;
+            string value;
+            switch(topic)
+            {
+                case "/response/temp":
+                    MostRecentTemp = PayloadToDouble(payload);
+                    value = MostRecentTemp.ToString();
+                    method = "ReceiveTemp";
+                    break;
+                case "/response/humid":
+                    MostRecentHumid = PayloadToDouble(payload);
+                    value = MostRecentHumid.ToString();
+                    method = "ReceiveHumid";
+                    break;
+                case "/response/moist":
+                    MostRecentMoist = PayloadToDouble(payload);
+                    value = MostRecentMoist.ToString();
+                    method = "ReceiveMoist";
+                    break;
+                default:
+                    Console.WriteLine($"Error with topic: {topic}");
+                    return;
+            }
+
+            await hubContext.Clients.All.SendAsync(method, value);
+        }
+
+        private double PayloadToDouble(byte[] payload)
+        {
+            return Math.Round(Double.Parse(Encoding.UTF8.GetString(payload)), 2);
         }
     }
 }
