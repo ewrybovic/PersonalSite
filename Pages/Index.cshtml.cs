@@ -13,19 +13,6 @@ namespace PersonalSite.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly PersonalSite.Data.PersonalSiteContext _context;
-        public bool isValidSession = false;
-
-        public IndexModel(PersonalSite.Data.PersonalSiteContext context)
-        {
-            _context = context;
-        }
-
-        public IList<User> User { get;set; }
-
-        public async Task OnGetAsync()
-        {
-            User = await _context.User.ToListAsync();
-        }
+        public async Task OnGetAsync() {}
     }
 }
