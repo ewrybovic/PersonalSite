@@ -23,7 +23,7 @@ namespace PersonalSite.MQTT
 
         public async void stop()
         {
-            await mqttServer.StartAsync(optionBuilder.Build());
+            await mqttServer.StopAsync();
         }
     }
 }

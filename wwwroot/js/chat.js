@@ -36,7 +36,9 @@ connection.on("ResponseMostRecent", function (humid, temp, moist) {
 });
 
 connection.start().then(function () {
-    document.getElementById("sendButton").disabled = false;
+    if (document.getElementById("sendButton").className == "Valid") {
+        document.getElementById("sendButton").disabled = false;
+    }
 
     // Call function to get the last temp and humid data
     connection.invoke("RequestMostRecent").catch(function (err) {

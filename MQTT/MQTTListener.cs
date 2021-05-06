@@ -64,6 +64,9 @@ namespace PersonalSite.MQTT
             string value;
             switch(topic)
             {
+                case "/response":
+                    await hubContext.Clients.All.SendAsync("ReceiveMessage", "Arduino", Encoding.UTF8.GetString(payload));
+                    return;
                 case "/response/temp":
                     MostRecentTemp = PayloadToDouble(payload);
                     value = MostRecentTemp.ToString();
