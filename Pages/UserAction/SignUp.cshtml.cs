@@ -48,6 +48,7 @@ namespace PersonalSite.Pages
             
             User.Password = HashPassword(Request.Form["password"].ToString());
             User.CreationDate = DateTime.Now;
+            User.IsAuthorized = false;
             _context.User.Add(User);
             await _context.SaveChangesAsync();
 
