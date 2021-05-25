@@ -31,7 +31,10 @@ namespace PersonalSite
             mqttBroker = new MQTTBroker(1883);
             MQTTProducer.init();
 
-            //Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;
+            using (var client = new PersonalSiteContext())
+            {
+                client.Database.EnsureCreated();
+            }
         }
 
         public IConfiguration Configuration { get; }
@@ -46,8 +49,7 @@ namespace PersonalSite
                 options.IdleTimeout = TimeSpan.FromMinutes(10);
             });
 
-            services.AddDbContext<PersonalSiteContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("PersonalSiteContext")));
+            services.AddEntityFrameworkSqlite().AddDbContext<PersonalSiteContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

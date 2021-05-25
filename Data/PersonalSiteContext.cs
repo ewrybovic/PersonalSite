@@ -9,9 +9,9 @@ namespace PersonalSite.Data
 {
     public class PersonalSiteContext : DbContext
     {
-        public PersonalSiteContext (DbContextOptions<PersonalSiteContext> options)
-            : base(options)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.UseSqlite("Filename=PersonalSiteDB.db");
         }
 
         public DbSet<PersonalSite.Models.User> User { get; set; }
