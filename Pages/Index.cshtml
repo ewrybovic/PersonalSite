@@ -5,44 +5,27 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Welcome to my website</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.User[0].Username)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User[0].Password)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User[0].CreationDate)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.User) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Username)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreationDate)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="container">
+    <hr />
+    <h5>Hello my name is Evan Rybovic.</h5>
+    <p>
+        I made this website initially to communicate to my Arduino that is monitoring the soil of one of my plants. 
+        The idea was to have my arduino send real time temperature, humidity and soil moisture data to the website so that I can monitor my plant while I am away.
+    </p>
+    <p>
+        You can see this in action in the <a asp-area="" asp-page="/ArduinoCommunicator">Arduino Communicator</a> page. 
+        In there you can view the real time data that is being sent by my arduino and, if you are an authorized user, send commands to the arduino.
+        I am using a DHT11 sensor for gathering temperature and humidity data and an EK1940 for gathering the moisture data.
+        For sending messages to and from the Arduino I am using MQTT and to show the real time data on the webpage I am using SignalR.
+        This website is also hosted on my RaspberryPi 3b so there may be performance problems somtimes.
+    </p>
+    <p>
+        I am planning on updating this website with some more features down the road. 
+        The next task on my list is to have a page that shows off some of my nature photography pictures.
+    </p>
+    <p>
+        Also if you are from Google..........<small>hire me plz</small>
+    </p>
+</div>
