@@ -47,6 +47,12 @@ namespace PersonalSite.MQTT
                 case "state":
                     appMessage.WithPayload( new byte[] {2} );
                     break;
+                case "rAir":
+                    appMessage.WithPayload(new byte[] {3});
+                    break;
+                case "rWater":
+                    appMessage.WithPayload(new byte[] {4});
+                    break;
                 default:
                     appMessage.WithPayload(message);
                     break;
